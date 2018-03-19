@@ -25,10 +25,10 @@ public class MethodeJournalisation {
      */
     public void saveLog4j(String loggerName, Priority priority, String message) {
         try {
-            Logger logger = Logger.getLogger(loggerName);
+            Logger loggerMiki = Logger.getLogger(loggerName);
             URL u = getClass().getClassLoader().getResource("log4j.xml");
             DOMConfigurator.configure(u);
-            logger.log(priority, message);
+            loggerMiki.log(priority, message);
         } catch (Exception e) {
             System.out.println("Erreur lors de la journalisation, veuillez verifier les configurations svp !");
         }

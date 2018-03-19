@@ -28,10 +28,6 @@
                 <li class="fa fa-ellipsis-v menu-separator"></li>
                 <li>
                     <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> Notifications <span class="notification-bubble BordRad3 animated rubberBand">0</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
-                    <ul style="width:200px; margin-left:-45px;" class="Animated03 submenu">
-                        <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18 blue"></i> <span class="Fright Fs16 TexAlRight">Chef d'équipe<span class="Fs10 DispBlock"> <p:outputLabel onclick="PF('chefequipe').show();" value="#{equipeBean.chef}"/> </span></span></a></li>
-                        <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18"></i> <span class="Fright Fs16 TexAlRight">Nouvelles equipes<span class="Fs10 DispBlock"> <p:outputLabel onclick="PF('monequipe').show();" value="#{equipeBean.membre}" /> </span></span></a></li>
-                    </ul>
                 </li>
                 <li class="fa fa-ellipsis-v menu-separator"></li>
                 <li>
@@ -68,7 +64,7 @@
                 <h2>Modifiez le mot de passe</h2></center>
             <p:outputPanel autoUpdate="true">
                 <div class="Container90 Fnone MarAuto TexAlCenter">
-                    <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
+                    <h:graphicImage name="images/LOGO.svg" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
                     <div class="EmptyBox20"></div>
                     <p:password id="lastPasse" required="true" value="#{loginBean.lastPass}" />
                     <p:watermark for="lastPasse" value="Ancien"  />

@@ -482,7 +482,7 @@ public class LoginBean implements Serializable {
             }
             journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
             SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
-            Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "index.xhtml");
+            Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "securite.xhtml");
         } catch (AuthenticationException e) {
             e.printStackTrace();
             FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_FATAL,
