@@ -121,52 +121,11 @@ public class LoginBean implements Serializable {
             this.rsl.saveOne(new Role("Activer compte"));
             this.rsl.saveOne(new Role("Désactiver compte"));
 
-            //Inscription
-            //Groupement
-            this.rsl.saveOne(new Role("Groupement"));
-            //Demande
-            this.rsl.saveOne(new Role("Demande"));
-            this.rsl.saveOne(new Role("Ajouter Demande"));
-            this.rsl.saveOne(new Role("Modifier Demande"));
-            this.rsl.saveOne(new Role("Valider Demande"));
-            this.rsl.saveOne(new Role("Retirer Enfant"));
-
-            //Personnel
-            this.rsl.saveOne(new Role("Personnel"));
-            this.rsl.saveOne(new Role("Ajouter Personnel"));
-            this.rsl.saveOne(new Role("modifier Personnel"));
-            this.rsl.saveOne(new Role("Activer Personnel"));
-            this.rsl.saveOne(new Role("Desactiver Personnel"));
-
-            //Equipe
-            this.rsl.saveOne(new Role("Gérer Equipe"));
-            this.rsl.saveOne(new Role("Mes Equipes"));
-
-            //Projet
-            this.rsl.saveOne(new Role("Ajouter Projet"));
-            this.rsl.saveOne(new Role("Modifier Projet"));
-            this.rsl.saveOne(new Role("Publier Projet"));
-            this.rsl.saveOne(new Role("Mettre Fin Projet"));
-
-            //Parrainage
-            this.rsl.saveOne(new Role("Parrainage"));
-
-            //Etat
-            this.rsl.saveOne(new Role("Etat"));
-
         }
 
         List<Profil> alle = psbl.getAll();
         if (alle.isEmpty()) {
             this.psbl.saveOne(new Profil("Administrateur", " "));
-            System.out.println(i++);
-            this.psbl.saveOne(new Profil("Responsable", " "));
-            System.out.println(i++);
-            this.psbl.saveOne(new Profil("Collaborateur", " "));
-            System.out.println(i++);
-            this.psbl.saveOne(new Profil("Donateur", " "));
-            System.out.println(i++);
-            this.psbl.saveOne(new Profil("Usager", " "));
         }
 
         List<Profil> profils = psbl.getBy("nom", "Super");
@@ -355,134 +314,17 @@ public class LoginBean implements Serializable {
                     this.desactiverCompte = "false";
                 }
 
-                // Inscription
-                if (subject.hasRole("Groupement") || subject.hasRole("Demande") || subject.hasRole("Personnel")) {
-                    this.inscription = "true";
-                } else {
-                    this.inscription = "false";
-                }
-
-                // Groupement
-                if (subject.hasRole("Groupement")) {
-                    this.groupement = "true";
-                } else {
-                    this.groupement = "false";
-                }
-
-                //Demande
-                if (subject.hasRole("Ajouter Demande") || subject.hasRole("Modifier Demande")
-                        || subject.hasRole("Valider Demande") || subject.hasRole("Retirer Enfant")) {
-                    this.demande = "true";
-                } else {
-                    this.demande = "false";
-                }
-
-                if (subject.hasRole("Ajouter Demande")) {
-                    this.ajouterDemande = "true";
-                } else {
-                    this.ajouterDemande = "false";
-                }
-
-                if (subject.hasRole("Modifier Demande")) {
-                    this.modifierDemande = "true";
-                } else {
-                    this.modifierDemande = "false";
-                }
-
-                if (subject.hasRole("Valider Demande")) {
-                    this.validerDemande = "true";
-                } else {
-                    this.validerDemande = "false";
-                }
-
-                if (subject.hasRole("Retirer Enfant")) {
-                    this.retirerEnfant = "true";
-                } else {
-                    this.retirerEnfant = "false";
-                }
-
-                //Personnel
-                if (subject.hasRole("Personnel")) {
-                    this.personnel = "true";
-                } else {
-                    this.personnel = "false";
-                }
-
-                //Equipe
-                if (subject.hasRole("Gérer Equipe") || subject.hasRole("Mes Equipes")) {
-                    this.Equipe = "true";
-                } else {
-                    this.Equipe = "false";
-                }
-
-                if (subject.hasRole("Gérer Equipe")) {
-                    this.gererEquipe = "true";
-                } else {
-                    this.gererEquipe = "false";
-                }
-
-                if (subject.hasRole("Mes Equipes")) {
-                    this.mesEquipes = "true";
-                } else {
-                    this.mesEquipes = "false";
-                }
-
-                //Projet
-                if (subject.hasRole("Ajouter Projet") || subject.hasRole("Modifier Projet")
-                        || subject.hasRole("Publier Projet") || subject.hasRole("Mettre Fin Projet")) {
-                    this.projet = "true";
-                } else {
-                    this.projet = "false";
-                }
-
-                if (subject.hasRole("Ajouter Projet")) {
-                    this.ajouterProjet = "true";
-                } else {
-                    this.ajouterProjet = "false";
-                }
-
-                if (subject.hasRole("Modifier Projet")) {
-                    this.modifierProjet = "true";
-                } else {
-                    this.modifierProjet = "false";
-                }
-
-                if (subject.hasRole("Publier Projet")) {
-                    this.publierProjet = "true";
-                } else {
-                    this.publierProjet = "false";
-                }
-
-                if (subject.hasRole("Mettre Fin Projet")) {
-                    this.mettreFinProjet = "true";
-                } else {
-                    this.mettreFinProjet = "false";
-                }
-
-                //Parrainage
-                if (subject.hasRole("Parrainage")) {
-                    this.parrainage = "true";
-                } else {
-                    this.parrainage = "false";
-                }
-                //Etat;
-                if (subject.hasRole("Etat")) {
-                    this.etat = "true";
-                } else {
-                    this.etat = "false";
-                }
-
-                if (!avoir) {
+               /* if (!avoir) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
                     username = "";
                     return;
-                }
+                }*/
 
             }
             journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
             SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
-            Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "securite.xhtml");
+            Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "index.xhtml");
         } catch (AuthenticationException e) {
             e.printStackTrace();
             FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_FATAL,
@@ -1055,5 +897,7 @@ public class LoginBean implements Serializable {
     public void setJournalisation(MethodeJournalisation journalisation) {
         this.journalisation = journalisation;
     }
+    
+    
 
 }
