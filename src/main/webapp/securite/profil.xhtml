@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"    
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:tab title="Profil">
+        <h:form id="profil">
+            <h:form id="ajoutProfil">
+                <p:commandButton value="Ajouter un profil" onclick="PF('profilAjouts').show();" process="@this" style="display:inline-block;margin-top:5px"/> 
+                <p></p>
+                <p:dialog  widgetVar="profilAjouts" closable="false" resizable="false" id="editP" modal="true" minHeight="150" minWidth="150" width="700" position="center">
+                    <p:fieldset legend="Formulaire de profil">
+                        <h:form id="modalForm">
+                            <p:growl id="growl" showSummary="true" life="4000"/>
+                            <center>
+                                <h:panelGrid columns="2" columnClasses="label, value" id="securiteP">
+                                    <h:outputText/>
+                                    <h:inputHidden value="#{profilBean.profil.id}"/>
+                                    <p:outputLabel value="Profil:" for="profil" />
+                                    <p:inputText id="profil" value="#{profilBean.profil.nom}"/>
+                                    <h:outputText/>   
+                                    <h:outputText/>
+                                    <p:commandButton  class="Fs16 OrangeButton" id="cancel" value="Annuler" actionListener="#{profilBean.cancel(actionEvent)}" process="@this" style="right: 100%" onclick="PF('profilAjouts').hide();"/>
+                                    <p:commandButton update=":profilsForm:profilsTab:compter:form:profi,:profilsForm:profilsTab:profil:afficheTab:ajouTab, growl" class="Fs16 GreenButton" id="ajouter" value="Ajouter" actionListener="#{profilBean.save(actionEvent)}" process="@form" style="left: 100%" />
+                                </h:panelGrid>                                                       
+                            </center>
+                        </h:form>
+                    </p:fieldset>
+                </p:dialog>
+            </h:form>
+            <h:form id="afficheTab">
+                <p:contextMenu for="ajouTab" style="width:5%" rendered="#{loginBean.modifierProfil}">
+                    <p:menuitem rendered="#{loginBean.modifierProfil}" style="color: #00AEEF" value="modifier" process="@form" update=":profilsForm:profilsTab:profil:ajoutProfil:modalForm:securiteP" action="#{profilBean.getObject(profi.id)}"  title="Editer" onclick="PF('profilAjouts').show();" id="Editer"/>
+                </p:contextMenu>
+                <p:dataTable  value="#{profilBean.profils}" var="profi" id="ajouTab"
+                              emptyMessage="Profil non trouvé" selectionMode="single"
+                              rows="5" scrollable="true"  paginator="true" paginatorPosition="top" 
+                              styleClass="classTypeFiche"
+                              rowsPerPageTemplate="2,5,10,15" rowKey="#{profi.id}" selection="#{profi}"
+                              style="border-color: #00AEEF">
+                    <f:facet name="header">
+                        <h:outputText value="LISTE DES PROFILS"/>
+                    </f:facet>
+                    <p:column id="CategorieId" headerText="Identifiant" filterBy="#{profi.id}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{profi.id}"/>
+                    </p:column>
+                    <p:column id="CategorieNom" headerText="Libellé" filterBy="#{profi.nom}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{profi.nom}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </h:form>
+    </p:tab>
+
+</ui:composition>

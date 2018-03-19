@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"    
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:tab title="Associer profil">
+        <h:form id="compte">
+            <p:growl id="growl1" showSummary="true" life="4000"/>
+            <center>
+                <p:panel style="border-color: #00AEEF">
+                    <h:panelGrid columns="3">
+                        <p:outputLabel value="Profil:" for="profi"/>
+                        <p:selectOneMenu  id="profi" value="#{utilisateurBean.profil}" effect="fade" style="width: 180px"
+                                          filter="true" filterMatchMode="startsWith"
+                                          converter="omnifaces.SelectItemsIndexConverter">
+                            <f:selectItem itemLabel="Choisir le profil" noSelectionOption="true"/>
+                            <f:selectItems value="#{utilisateurBean.profils}" var="prof" itemLabel="#{prof.nom}" itemValue="#{prof}"/>
+
+                        </p:selectOneMenu>
+                        <h:outputText/>
+                        <p:outputLabel value="Personnels:" for="utilisateur" />
+                        <p:selectCheckboxMenu id="utilisateur" value="#{utilisateurBean.utilisateurs1}" panelStyleClass="without-selectall"
+                                              converter="omnifaces.SelectItemsIndexConverter" style="width: 180px" 
+                                              label="Groupe" filter="true" filterMatchMode="contains">
+                           <f:selectItems value="#{utilisateurBean.utilisateursNonProfil()}" itemLabel="#{num.nom}#{utilisateurBean.space}#{num.prenom}" itemValue="#{num}" var="num"/>
+                        </p:selectCheckboxMenu>
+
+                        <h:outputText/>   
+                        <h:outputText/>
+                        <h:outputText/>
+
+                    </h:panelGrid>
+                    <p:commandButton update=":profilsForm:profilsTab:compte:utilisateur,:profilsForm:profilsTab:tabCompte:ajoutab,:comptesForm:comptesTab:afficheTabP:ajouTabP,growl1" class="Fs16 GreenButton" id="ajouter1" value="Ajouter" actionListener="#{utilisateurBean.associerProfil()}" process="@form" style="left: 35%"/>
+                </p:panel>
+            </center>
+        </h:form>
+        <h:form id="tabCompte">
+            <p:dataTable id="ajoutab" value="#{utilisateurBean.profilUtilisateurs}" var="item"
+                         emptyMessage="personnel non trouvé" paginator="true" rows="5"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks}
+                         {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="2,5,10,15"
+                         style="border-color: #00AEEF">
+                <p:column id="utilisateurIdentite" headerText="Identité" filterBy="#{item.utilisateur.nom}#{utilisateurBean.space}#{item.utilisateur.prenom}" filterMatchMode="exact">
+                    <h:outputText value="#{item.utilisateur.nom}#{utilisateurBean.space}#{item.utilisateur.prenom}"/>
+                </p:column>
+                <p:column id="utilisateurProfil" headerText="Profil" filterBy="#{item.profil.nom}" filterMatchMode="exact">
+                    <h:outputText value="#{item.profil.nom}"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton value="modifier"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form id="compter">
+            <p:dialog  widgetVar="profilAjout" closable="false" resizable="false" id="editP" modal="true" minHeight="150" minWidth="150" width="700" position="top">    
+                <h:form id="form">
+                    <p:growl id="growl" showSummary="true" life="4000"/>
+                    <center>
+                        <h:panelGrid columns="2" columnClasses="label, value" id="wi">
+                            <p:outputLabel value="Profil:" for="profi" />
+                            <p:selectOneMenu  id="profi" value="#{utilisateurBean.profil}" effect="fade" style="width: 180px"
+                                              filter="true" filterMatchMode="startsWith"
+                                              converter="omnifaces.SelectItemsIndexConverter">
+                                <f:selectItem itemLabel="Choisir le profil" noSelectionOption="true"/>
+                                <f:selectItems value="#{utilisateurBean.profils}" var="prof" itemLabel="#{prof.nom}" itemValue="#{prof}"/>
+
+                            </p:selectOneMenu>
+                            <h:outputText/>   
+                            <h:outputText/> 
+                            <p:commandButton  class="Fs16 OrangeButton" id="cancel" value="Annuler" process="@this" style="right: 100%" onclick="PF('profilAjout').hide();"/>
+                            <p:commandButton update=":profilsForm:profilsTab:tabCompte:ajoutab, growl" class="Fs16 GreenButton" id="ajouter" value="modifier" actionListener="#{utilisateurBean.modifierPersonnelProfil()}" process="@form" style="left: 100%" onclick="PF('profilAjout').hide();"/>
+                        </h:panelGrid>                                                       
+                    </center>
+                </h:form>
+            </p:dialog>
+
+        </h:form>
+    </p:tab>
+
+</ui:composition>

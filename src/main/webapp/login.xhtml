@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>ShopApp</title>
+        <h:outputScript name="js/layout.js" library="spark-layout" />
+
+        <h:outputText value="&lt;!--[if gte IE 9]&gt;" escape="false" />
+        <style type="text/css">
+            /* styles for IE 9 */
+        </style>
+        <h:outputText value="&lt;![endif]--&gt;" escape="false" />
+
+        <ui:insert name="head" />
+    </h:head>
+
+    <h:body>
+        <h:form id="login">
+            <p:growl id="message" life="4000" showSummary="true" />
+            <p:outputPanel autoUpdate="true">
+                <div id="layout-portlets-cover">
+                    <div class="other-pages-box Container40 Responsive50 MarAuto Fnone TexAlCenter ShadowGray MarTop10"
+                         style="margin-top:5%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:center; background-size:cover;">
+                        <div class="Container90 Fnone MarAuto TexAlCenter">
+                            <div class="EmptyBox50"></div>
+                         <!--    <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>-->
+                            <div class="EmptyBox20"></div>
+                            <p:inputText id="identifiant" value="#{loginBean.username}" placeholder="Username" styleClass="Container80 Fnone MarAuto Fs18"/>
+                            <div class="EmptyBox10"></div>
+                            <p:password id="motdepasse" value="#{loginBean.password}" placeholder="Password" styleClass="Container80 Fnone MarAuto Fs18"/>
+                            <div class="EmptyBox20"></div>
+<!--                            <div class="Container85 Fnone MarAuto softgray">
+                                <div class="EmptyBox5"></div>
+                                <p:selectBooleanCheckbox id="rememberMe" value="#{loginBean.remember}" itemLabel="Se souvenir"/>
+                            </div>-->
+                            <div class="EmptyBox30"></div>
+                            <p:commandButton process="@form"  value="Se connecter" styleClass="Fs16" update="message" actionListener="#{loginBean.login()}"/>                            <div class="EmptyBox10"></div>
+
+                            <div class="Seperator"></div>
+                            <div class="EmptyBox10"></div>
+                            <p:commandButton value="Mot de passe oublié" styleClass="Fs16 RedButton" onclick="PF('dialogOublie').show()"/>
+                            <p:commandButton value="Contact Admin ?" styleClass="Fs16 OrangeButton" onclick="PF('dialogOublie').show()"/>
+                            <div class="EmptyBox50"></div>
+                        </div>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+        <p:dialog widgetVar="dialogpasse" width="500" position="top" style="margin-top:1%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:top; background-size:cover;">
+            <h:form>
+                <p:growl id="grow2" life="4000" showSummary="true" />
+                <center><h2>Premiere connexion</h2>
+                    <h2>Modifiez le mot de passe</h2></center>
+                <p:outputPanel autoUpdate="true">
+                    <div class="Container90 Fnone MarAuto TexAlCenter">
+                        <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
+                        <div class="EmptyBox20"></div>
+                        <p:password id="newPasse" requiredMessage="Saisir le mot de passe" required="true" value="#{loginBean.newPass}" feedback="true" styleClass="Container80 Fnone MarAuto Fs18" />
+                        <p:watermark for="newPasse" value="Nouveau"  />
+                        <div class="EmptyBox10"></div>
+                        <p:password id="newSasie" value="#{loginBean.retapPass}" feedback="true" styleClass="Container80 Fnone MarAuto Fs18" />
+                        <p:watermark for="newSasie" value="Confirmer"  />
+                        <div class="EmptyBox20"></div>
+                        <p:inputText id="question" required="true" requiredMessage="saisir une question" value="#{loginBean.question}" styleClass="Container80 Fnone MarAuto Fs18"/>
+                        <p:watermark for="question" value="Question"  />
+                        <div class="EmptyBox20"></div>
+                        <p:inputText id="reponse" required="true" requiredMessage="saisir la réponse à la question" value="#{loginBean.reponse}" styleClass="Container80 Fnone MarAuto Fs18"/>
+                        <p:watermark for="reponse" value="Reponse"  />
+                        <div class="EmptyBox30"></div>
+                        <div class="EmptyBox30"></div>
+                        <p:commandButton  value="Retour" style="padding: 5px" onclick="PF('dialogpasse').hide()"
+                                          process="@form"/>
+                        <p:commandButton  value="Modifier" style="padding: 5px" update="grow2"
+                                          action="#{loginBean.modifierPasse()}"
+                                          process="@form"/>
+                        <div class="EmptyBox10"></div>
+                    </div>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="dialogOublie" position="top" width="400" style="margin-top:1%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:center; background-size:cover;">
+            <h:form>
+                <p:growl id="grow2" life="4000" showSummary="true" />
+                <center><h2>Vérification du login</h2></center>
+                <p:outputPanel id="ver" autoUpdate="true">
+                    <div class="Container90 Fnone MarAuto TexAlCenter">
+                        <div class="EmptyBox50"></div>
+                        <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
+                        <div class="EmptyBox20"></div>
+                        <p:inputText id="username" requiredMessage="saisir l'identifiant" required="true" value="#{loginBean.us}"/>
+                        <p:watermark for="username" value="Identifiant"/>
+                        <div class="EmptyBox30"></div>
+                        <div class="EmptyBox30"></div>
+                        <p:commandButton  value="Vérifier" style="padding: 5px" update="grow2,ver,:rec:question"
+                                          action="#{loginBean.recupererQuestion()}"
+                                          process="@form"/>
+                        <div class="EmptyBox10"></div>
+                    </div>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="dialogRecup" position="top" width="500" style="margin-top:1%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:center; background-size:cover;">
+            <h:form id="rec">
+                <p:growl id="grow2" life="4000" showSummary="true" />
+                <center><h2>Vérification de la réponse et </h2>
+                    <h2>réinitialisation du mot de passe</h2></center>
+                <p:outputPanel autoUpdate="true">
+                    <div class="Container90 Fnone MarAuto TexAlCenter">
+                        <div class="EmptyBox50"></div>
+                        <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
+                        <div class="EmptyBox20"></div>
+                        <h:outputText id="question" value="#{loginBean.recupererQuestion()}"/>
+                        <div class="EmptyBox30"></div>
+                        <p:inputText id="reponse" required="true" value="#{loginBean.reponse}"/>
+                        <p:watermark for="reponse" value="tapez la reponse"/>
+                        <div class="EmptyBox30"></div>
+                        <p:commandButton  value="Valider" style="padding: 5px" update="grow2"
+                                          action="#{loginBean.reinitialiserPasse()}"
+                                          process="@form"/>
+                        <div class="EmptyBox10"></div>
+                    </div>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
+        <p:dialog widgetVar="error" width="500" position="top" style="margin-top:1%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:center; background-size:cover;">
+            <div id="layout-portlets-cover">
+                <div class="other-pages-box Container40 Responsive50 MarAuto Fnone TexAlCenter ShadowGray MarTop10"
+                     style="margin-top:0%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:center; background-size:cover; width: 100%">
+                    <div class="Container90 Fnone MarAuto TexAlCenter">
+                        <div class="EmptyBox50"></div>
+                        <h:graphicImage name="images/access-denied.svg" library="spark-layout" styleClass="MarAuto MarTop20 Wid30"/>
+                        <span class="Fs40 Wid100 DispBlock red">Votre compte est inactif!!!Veillez contactez l'administrateur</span>
+                        <div class="EmptyBox30"></div>
+                        <p:button  value="Retour à la page de connexion" styleClass="Fs16 RedButton" href="login.xhtml"></p:button>
+                        <div class="EmptyBox50"></div>
+                    </div>
+                </div>
+            </div>
+        </p:dialog>
+        <h:outputStylesheet name="css/core-layout.css" library="spark-layout" />
+        <h:outputStylesheet name="css/font-awesome.css" library="spark-layout" />
+        <h:outputStylesheet name="css/animate.css" library="spark-layout" />
+        <h:outputStylesheet name="css/spark-layout-blue.css" library="spark-layout" />
+    </h:body>
+
+</html>

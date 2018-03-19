@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"    
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:tab title="Associer rôles">
+        <h:form id="pdialogProfilForm">
+            <p:growl id="messages" showSummary="true" life="4000"/>
+            <p:panel style="border-color: #00AEEF">
+                <p:outputPanel autoUpdate="true" id="panel">
+                    <center>
+                        <h:panelGrid columns="2">    
+                            <p:outputLabel value="Profils" for="profils" styleClass="labelfont"/> 
+                            <p:selectOneMenu id="profils" value="#{roleBean.selectProfil}" 
+                                             converter="omnifaces.SelectItemsIndexConverter" required="true">  
+                                <f:selectItem itemLabel="Choisir un Profil"  noSelectionOption="true"/>
+                                <f:selectItems value="#{roleBean.profils}" var="profil"
+                                               itemLabel="#{profil.nom}" itemValue="#{profil}"/>
+                                <p:ajax event="change" process="@this" listener="#{roleBean.setProfilRole()}" update="roleGrid"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </center>
+                    <br/>
+                    <p:selectManyCheckbox id="roleGrid" value="#{roleBean.selectRoles}"
+                                          layout="grid" columns="8" 
+                                          converter="omnifaces.SelectItemsIndexConverter" >
+                        <f:selectItems value="#{roleBean.roles}" var="role" itemLabel="#{role.nom}" itemValue="#{role}" />
+                    </p:selectManyCheckbox>
+                </p:outputPanel>
+                <br/>
+                <center>
+                    <p:commandButton update="messages,panel" value="Modifier" process="@form"  action="#{roleBean.modifierRole()}"/>  
+                </center>
+
+            </p:panel>
+
+        </h:form>
+    </p:tab> 
+
+</ui:composition>

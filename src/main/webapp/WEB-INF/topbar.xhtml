@@ -1,0 +1,91 @@
+<ui:composition 
+
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+
+    <div id="layout-topbar" class="ShadowGray">
+        <div id="layout-topbar-indent">
+            <h:graphicImage name="images/LOGO.svg" styleClass="Fleft" library="spark-layout" id="logo" class="Fleft"/> 
+            <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
+            <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
+
+            <ul id="layout-topbar-menu">
+                <li>
+                    <a href="#" class="Animated05"><i class="fa fa-sign-out"></i><p:commandLink process="@this" value="Déconnexion" action="#{loginBean.logout()}"/></a>
+                </li>
+                <li class="fa fa-ellipsis-v menu-separator"></li>
+                <li>
+                    <a class="Animated05 CursPointer"><i class="fa fa-gear fa-spin"></i> Paramètres <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                    <ul style="width:150px; margin-left:-30px;" class="Animated03 submenu">
+                        <li><a href="#" class="Animated05" onclick="PF('dialogpasse').show();"><i class="fa fa-edit fa blue"></i> Modifier mon mot de passe</a></li>
+                        <li><a href="#" class="Animated05"><i class="fa fa-user-plus fa blue"></i> Contacter l'administrateur</a></li>
+                    </ul>
+                </li>
+                <li class="fa fa-ellipsis-v menu-separator"></li>
+                <li>
+                    <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> Notifications <span class="notification-bubble BordRad3 animated rubberBand">0</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                    <ul style="width:200px; margin-left:-45px;" class="Animated03 submenu">
+                        <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18 blue"></i> <span class="Fright Fs16 TexAlRight">Chef d'équipe<span class="Fs10 DispBlock"> <p:outputLabel onclick="PF('chefequipe').show();" value="#{equipeBean.chef}"/> </span></span></a></li>
+                        <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18"></i> <span class="Fright Fs16 TexAlRight">Nouvelles equipes<span class="Fs10 DispBlock"> <p:outputLabel onclick="PF('monequipe').show();" value="#{equipeBean.membre}" /> </span></span></a></li>
+                    </ul>
+                </li>
+                <li class="fa fa-ellipsis-v menu-separator"></li>
+                <li>
+                    <a class="Animated05 CursPointer"><i class="fa fa-user"></i><p:outputLabel value="#{loginBean.currentUser()}"/> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                    <ul style="width:175px; margin-left:-10px;" class="Animated03 submenu">
+                        <li><a class="Animated05"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight"><p:outputLabel value="#{loginBean.currentUser()}"/><span class="Fs10 DispBlock"><h4>Dernière connexion <p:outputLabel value="#{loginBean.sessionTime().toGMTString()}"/></h4></span></span></a></li>
+                        <li><a href="#" class="Animated05" onclick="PF('profil').show();"><i class="fa fa-user-md Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">Mon profil</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <p:dialog widgetVar="profil" closable="false" resizable="false" modal="true" minHeight="150" minWidth="150" width="700" position="top">    
+        <h:form>
+            <p:growl id="growl" showSummary="true" life="4000"/>
+            <center>
+                <p:panel header="mes roles" >
+                    <p:outputLabel value="#{roleBean.profil}"/>
+                    <p:selectManyCheckbox id="roleGrid" style="font-family: fantasy"
+                                          layout="grid" columns="4" 
+                                          converter="omnifaces.SelectItemsIndexConverter">
+                        <f:selectItems itemDisabled="true" value="#{roleBean.mesRoles}" var="role" itemLabel="#{role.nom}"/>
+                    </p:selectManyCheckbox>
+                    <p:commandButton style="right: 40%" class="Fs16 OrangeButton" id="retour" value="Retour" onclick="PF('profil').hide()"/>
+                </p:panel>
+            </center>
+
+        </h:form>
+    </p:dialog>
+
+    <p:dialog widgetVar="dialogpasse" width="500" position="top" style="margin-top:1%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:top; background-size:cover;">
+        <h:form>
+            <center> <p:growl id="grow2" life="4000" showSummary="true" />
+                <h2>Modifiez le mot de passe</h2></center>
+            <p:outputPanel autoUpdate="true">
+                <div class="Container90 Fnone MarAuto TexAlCenter">
+                    <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
+                    <div class="EmptyBox20"></div>
+                    <p:password id="lastPasse" required="true" value="#{loginBean.lastPass}" />
+                    <p:watermark for="lastPasse" value="Ancien"  />
+                    <div class="EmptyBox10"></div>
+                    <p:password id="newPasse" required="true" value="#{loginBean.newPass}" feedback="true"/>
+                    <p:watermark for="newPasse" value="Nouveau"  />
+                    <div class="EmptyBox20"></div>
+                    <p:password id="newSasie" required="true" value="#{loginBean.retapPass}" feedback="true"/>
+                    <p:watermark for="newSasie" value="Confirmer"  />
+                    <div class="EmptyBox30"></div>
+                    <div class="EmptyBox30"></div>
+                    <p:commandButton  value="Modifier" style="padding: 5px" update="grow2"
+                                      action="#{loginBean.modifierPasse2()}"
+                                      process="@form"/>
+                    <div class="EmptyBox10"></div>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+</ui:composition>

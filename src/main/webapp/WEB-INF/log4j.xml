@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>  
+    <appender name="DB" class="com.brendev.shopapp.journalisation.CustomJDBCAppender">
+        <param name="URL" value="jdbc:postgresql://localhost:5432/shopApp"/>
+        <param name="driver" value="org.postgresql.Driver"/>
+        <!--<param name="driver" value="com.mysql.jdbc.Driver"/>-->
+        <param name="user" value="postgres"/>
+        <param name="password" value="@Hermionne2017"/>
+        <layout class="org.apache.log4j.PatternLayout">
+                
+        </layout>
+    </appender>
+ 
+    <root>
+        <level value="INFO" />
+        <appender-ref ref="DB" />
+    </root>   
+</log4j:configuration>
+

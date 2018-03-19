@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"    
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:tab title="Désactiver compte">
+        <h:form id="afficheTabP1">
+            <p:growl id="growl1" showSummary="true" life="4000"/>
+            <p:dataTable  value="#{utilisateurBean.utilisateurActif()}" var="user" id="ajouTabP1"
+                          emptyMessage="Personnel non trouvé" paginator="true" rows="5"
+                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks}
+                          {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          rowsPerPageTemplate="2,5,10,15" style="border-color: #00AEEF">
+                <p:column id="utilisateurNom" headerText="Nom" filterBy="#{user.nom}" filterMatchMode="exact">
+                    <h:outputText value="#{user.nom}"/>
+                </p:column>
+                <p:column id="utilisateurPrenom" headerText="Prenom" filterBy="#{user.prenom}" filterMatchMode="startsWith">
+                    <h:outputText value="#{user.prenom}"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton value="desactiver" process="@this" update="ajouTabP1,:comptesForm:comptesTab:afficheTabP:ajouTabP,:comptesForm:comptesTab:afficheTabP1:growl1" action="#{utilisateurBean.desactiverUtilisateur(user.id)}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </p:tab>
+
+</ui:composition>
