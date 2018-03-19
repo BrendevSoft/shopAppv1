@@ -38,10 +38,10 @@ import org.apache.shiro.web.util.WebUtils;
 import org.omnifaces.util.Faces;
 import org.primefaces.context.RequestContext;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -52,6 +52,7 @@ import org.apache.log4j.Logger;
 public class LoginBean implements Serializable {
 
     private MethodeJournalisation journalisation;
+
     @EJB
     private RoleServiceBeanLocal rsl;
 
@@ -63,69 +64,59 @@ public class LoginBean implements Serializable {
 
     @EJB
     private ProfilUtilisateurServiceBeanLocal pusbl;
+    @EJB//HUM Tu m'as vraiment dérangé.plus de 24h avant de me rappeller de te mettre.hum
+    private ProfilRoleServiceBeanLocal prsbl;
 
+    private Date date = new Date();
     private String username;
     private String password;
     private String newPass;
     private String retapPass;
     private String lastPass;
-    private String us = "";
-    private String recupResponse = "";
+    private String per = "";
     private String question;
     private String reponse;
-    private String profil, creerProfil, modifierProfil, associerPoste, associerProfil, associerRole,
-            activerCompte, desactiverCompte, securite, inscription, groupement, demande, personnel,
-            ajouterDemande, modifierDemande, validerDemande, retirerEnfant, ajouterPersonnel, modifierPersonnel,
-            ActiverPersonnel, DesactiverPersonnel, Equipe, gererEquipe, mesEquipes, projet, ajouterProjet, modifierProjet,
-            publierProjet, mettreFinProjet, parrainage, etat;
-    private Utilisateur user;
-    private Utilisateur users;
-    private ProfilUtilisateur profilUtilisateur;
+    private String creerCabinet, modifierCabinet, creerPersonnel, modifierPersonnel, creerClient, modifierClient,
+            creerCycle, modifierCycle, creerExercice, modifierExercice, creerTypeMision, modifierTypeMision,
+            creerClasseur, modifierClasseur, creerDossier, modifierDossier, creerContrat, modifierContrat,
+            mesEquipes, creerMission, modifierMission, creerEquipe, modifierEquipe,
+            affecterMembre, validerMembre, creerClasseurClient, modifierClasseurClient, creerDossierClient,
+            modifierDossierClient, creerFichier, modifierFichier, poste, profil,
+            creerPoste, modifierPoste, creerProfil, modifierProfil, associerPoste, associerProfil, associerRole,
+            activerCompte, desactiverCompte, administration, mission, rapport, etat, securite, personnel, cabinet,
+            client, cycle, exercice, typeMission, classeur, dossier, contrat, missione, equipe, classeurClient, dossierClient, fichier;
+    private Utilisateur pers;
+    private Utilisateur perse;
     private boolean remember = false;
     private boolean admin;
-    private Date date = new Date();
-
-    @EJB//HUM Tu m'as vraiment dérangé.plus de 24h avant de me rappeller de te mettre.hum
-    private ProfilRoleServiceBeanLocal prsbl;
 
     /**
      * Creates a new instance of LoginBean
      */
     public LoginBean() {
-        user = new Utilisateur();
-        users = new Utilisateur();
+        pers = new Utilisateur();
+        perse = new Utilisateur();
         journalisation = new MethodeJournalisation();
     }
 
     @PostConstruct
     public void init() {
-        int i = 0;
-        //Vérification de la connexion internet
-       /* boolean test = this.checkIntConnection();
-        FacesContext context = FacesContext.getCurrentInstance();
-        if (test) {
-            context.addMessage(null, new FacesMessage("Connexion Internet disponible"));
-        } else {
-            context.addMessage(null, new FacesMessage("Connexion Internet non disponible"));
-        }*/
-
-       
         List<Role> all = rsl.getAll();
-        if (all.isEmpty()) {
-
-            //Securite
+        if (all.isEmpty()) {;
+            this.rsl.saveOne(new Role("Créer poste"));
+            this.rsl.saveOne(new Role("Modifier poste"));
             this.rsl.saveOne(new Role("Créer profil"));
             this.rsl.saveOne(new Role("Modifier profil"));
+            this.rsl.saveOne(new Role("Associer poste"));
             this.rsl.saveOne(new Role("Associer profil"));
             this.rsl.saveOne(new Role("Associer role"));
             this.rsl.saveOne(new Role("Activer compte"));
             this.rsl.saveOne(new Role("Désactiver compte"));
-
         }
 
         List<Profil> alle = psbl.getAll();
         if (alle.isEmpty()) {
-            this.psbl.saveOne(new Profil("Administrateur", " "));
+            this.psbl.saveOne(new Profil("Administrateur", "administrer"));
         }
 
         List<Profil> profils = psbl.getBy("nom", "Super");
@@ -160,52 +151,29 @@ public class LoginBean implements Serializable {
                 pu.setDateAffectation(date);
                 pu.setProfil(psbl.getBy("nom", "Super").get(0));
                 pusbl.saveOne(pu);
-               // journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "insérrer");
                 tx.commit();
             } catch (Exception e) {
                 try {
                     tx.rollback();
                 } catch (IllegalStateException ex) {
-                    Logger.getLogger(UtilisateurBean.class.getName()).log(Level.FATAL, null, ex);
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
-                    Logger.getLogger(UtilisateurBean.class.getName()).log(Level.FATAL, null, ex);
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SystemException ex) {
-                    Logger.getLogger(UtilisateurBean.class.getName()).log(Level.FATAL, null, ex);
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
 
     }
 
-   /* public boolean checkIntConnection() {
-        boolean status = false;
-        Socket sock = new Socket();
-        InetSocketAddress address = new InetSocketAddress("www.google.com", 80);
-        try {
-            sock.connect(address, 3000);
-            if (sock.isConnected()) {
-                status = true;
-            }
-        } catch (Exception e) {
-
-        } finally {
-            try {
-                sock.close();
-            } catch (Exception e) {
-
-            }
-        }
-
-        return status;
-    }*/
-
     public void login() throws IOException {
         try {
             System.out.println("user=" + username);
             System.out.println("ps=" + password);
-            user = usbl.getOneBy("login", username);
-            if (user != null) {
-                if (user.getActif() == false) {
+            pers = usbl.getOneBy("login", username);
+            if (pers != null) {
+                if (pers.getActif() == false) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
                     username = "";
@@ -213,12 +181,13 @@ public class LoginBean implements Serializable {
                 }
             }
 
-            if (user != null) {
-                boolean test = new Sha256Hash("admin").toHex().equals(user.getMotPasse());
-                if (test && user.getActif() == true) {
+            if (pers != null) {
+                boolean test = new Sha256Hash("admin").toHex().equals(pers.getMotPasse());
+                if (test && pers.getActif() == true) {
 
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('dialogpasse').show();");
+                    context.execute("PF('dialogRecup').hide();");
                     return;
                 }
 
@@ -257,13 +226,32 @@ public class LoginBean implements Serializable {
 
             if (!username.equalsIgnoreCase("admin")) {
 
-                //Debut Sécurité
-                if (subject.hasRole("Créer profil") || subject.hasRole("Modifier profil")
-                        || subject.hasRole("Associer profil") || subject.hasRole("Associer role")
-                        || subject.hasRole("Activer compte") || subject.hasRole("Désactiver compte")) {
+                if (subject.hasRole("Créer poste") || subject.hasRole("Modifier poste")
+                        || subject.hasRole("Créer profil") || subject.hasRole("Modifier profil")
+                        || subject.hasRole("Associer poste") || subject.hasRole("Associer profil")
+                        || subject.hasRole("Associer role") || subject.hasRole("Activer compte")
+                        || subject.hasRole("Désactiver compte")) {
                     this.securite = "true";
                 } else {
                     this.securite = "false";
+                }
+
+                if (subject.hasRole("Créer poste") || subject.hasRole("Modifier poste")) {
+                    this.poste = "true";
+                } else {
+                    this.poste = "false";
+                }
+
+                if (subject.hasRole("Créer poste")) {
+                    this.creerPoste = "true";
+                } else {
+                    this.creerPoste = "false";
+                }
+
+                if (subject.hasRole("Modifier poste")) {
+                    this.modifierPoste = "true";
+                } else {
+                    this.modifierPoste = "false";
                 }
 
                 if (subject.hasRole("Créer profil") || subject.hasRole("Modifier profil")) {
@@ -314,15 +302,15 @@ public class LoginBean implements Serializable {
                     this.desactiverCompte = "false";
                 }
 
-               /* if (!avoir) {
+                if (!avoir) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
                     username = "";
                     return;
-                }*/
+                }
 
             }
-            journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
+            journalisation.saveLog4j(LoginBean.class.getName(), org.apache.log4j.Level.INFO, "Journaliser");
             SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
             Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "index.xhtml");
         } catch (AuthenticationException e) {
@@ -335,11 +323,11 @@ public class LoginBean implements Serializable {
     }
 
     public String currentUser() {
-        Utilisateur usere = EntityRealm.getUser();
-        if (usere == null) {
+        Utilisateur user = EntityRealm.getUser();
+        if (user == null) {
             return "Admin";
         }
-        return EntityRealm.getUser().getNom().concat(" ").concat(EntityRealm.getUser().getPrenom());
+        return EntityRealm.getUser().getNom();
     }
 
     public Date sessionTime() {
@@ -356,13 +344,25 @@ public class LoginBean implements Serializable {
 
     }
 
+    /*public void modifierPasse() {
+     if (newPass.trim().equals(retapPass.trim())) {
+     pers.setMotPasse(new Sha256Hash(newPass.trim()).toHex());
+     psl.updateOne(pers);
+     FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_INFO,
+     "Mot de passe corriger", "");
+     FacesContext.getCurrentInstance().addMessage("erreur_login", mf);
+     } else {
+     FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_FATAL,
+     "Les mots de passe ne concorde pas", "");
+     FacesContext.getCurrentInstance().addMessage("erreur_login", mf);
+     }
+     }*/
     public void modifierPasse() {
         if (newPass.trim().equals(retapPass.trim())) {
-            RequestContext.getCurrentInstance().execute("PF('dialogRecup').hide();");
-            user.setMotPasse(new Sha256Hash(newPass.trim()).toHex());
-            user.setQuestion(question);
-            user.setReponse(reponse);
-            usbl.updateOne(user);
+            pers.setMotPasse(new Sha256Hash(newPass.trim()).toHex());
+            pers.setQuestion(question);
+            pers.setReponse(reponse);
+            usbl.updateOne(pers);
             question = "";
             reponse = "";
             RequestContext.getCurrentInstance().execute("PF('dialogpasse').hide();");
@@ -416,14 +416,13 @@ public class LoginBean implements Serializable {
     }
 
     public void reinitialiserPasse() {
-        Utilisateur use = this.usbl.getOneBy("login", us);
-        if (use.getActif() == true) {
-            if (reponse.equals(use.getReponse())) {
-                RequestContext.getCurrentInstance().execute("PF('dialogRecup').hide();");
-                use.setMotPasse(new Sha256Hash("admin").toHex());
-                use.setQuestion(null);
-                use.setReponse(null);
-                usbl.updateOne(use);
+        Utilisateur pe = this.usbl.getOneBy("login", per);
+        if (pe.getActif() == true) {
+            if (reponse.equals(pe.getReponse())) {
+                pe.setMotPasse(new Sha256Hash("admin").toHex());
+                pe.setQuestion(null);
+                pe.setReponse(null);
+                usbl.updateOne(pe);
                 question = "";
                 reponse = "";
                 RequestContext context = RequestContext.getCurrentInstance();
@@ -441,43 +440,40 @@ public class LoginBean implements Serializable {
     }
 
     public String recupererQuestion() {
-        if (!us.equals("")) {
-            Utilisateur use = this.usbl.getOneBy("login", us);
+        if (!per.equals("")) {
+            Utilisateur pe = this.usbl.getOneBy("login", per);
             String quest = "";
-            if (use != null) {
-                RequestContext context = RequestContext.getCurrentInstance();
-                context.execute("PF('dialogOublie').hide();");
-                if (!use.getMotPasse().equals(new Sha256Hash("admin").toHex())) {
-                    if (use.getActif() == true) {
-                        quest = use.getQuestion();
-
+            if (pe != null) {
+                if (!pe.getMotPasse().equals(new Sha256Hash("admin").toHex())) {
+                    if (pe.getActif() == true) {
+                        quest = pe.getQuestion();
+                        RequestContext context = RequestContext.getCurrentInstance();
                         context.execute("PF('dialogRecup').show();");
+                        context.execute("PF('dialogOublie').hide();");
                         return quest;
                     } else {
-                        us = "";
+                        per = "";
+                        RequestContext context = RequestContext.getCurrentInstance();
                         context.execute("PF('dialogOublie').hide();");
                         FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_FATAL,
                                 "Votre compte est inactif,contactez l'administrateur", "");
                         FacesContext.getCurrentInstance().addMessage("erreur_login", mf);
                     }
                 } else {
+                    RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('dialogOublie').hide();");
                     FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Connectez vous à votre compte pour changer votre mot de passe", "");
                     FacesContext.getCurrentInstance().addMessage("erreur_login", mf);
                 }
             } else {
-                us = "";
+                per = "";
                 FacesMessage mf = new FacesMessage(FacesMessage.SEVERITY_FATAL,
                         "le login saisi est inconnu", "");
                 FacesContext.getCurrentInstance().addMessage("erreur_login", mf);
             }
         }
         return "";
-    }
-
-    public void synchroniser() {
-
     }
 
     public RoleServiceBeanLocal getRsl() {
@@ -520,6 +516,14 @@ public class LoginBean implements Serializable {
         this.retapPass = retapPass;
     }
 
+    public Utilisateur getPers() {
+        return pers;
+    }
+
+    public void setPers(Utilisateur pers) {
+        this.pers = pers;
+    }
+
     public boolean isRemember() {
         return remember;
     }
@@ -542,6 +546,254 @@ public class LoginBean implements Serializable {
 
     public void setPrsbl(ProfilRoleServiceBeanLocal prsbl) {
         this.prsbl = prsbl;
+    }
+
+    public String getCreerCabinet() {
+        return creerCabinet;
+    }
+
+    public void setCreerCabinet(String creerCabinet) {
+        this.creerCabinet = creerCabinet;
+    }
+
+    public String getModifierCabinet() {
+        return modifierCabinet;
+    }
+
+    public void setModifierCabinet(String modifierCabinet) {
+        this.modifierCabinet = modifierCabinet;
+    }
+
+    public String getCreerPersonnel() {
+        return creerPersonnel;
+    }
+
+    public void setCreerPersonnel(String creerPersonnel) {
+        this.creerPersonnel = creerPersonnel;
+    }
+
+    public String getModifierPersonnel() {
+        return modifierPersonnel;
+    }
+
+    public void setModifierPersonnel(String modifierPersonnel) {
+        this.modifierPersonnel = modifierPersonnel;
+    }
+
+    public String getCreerClient() {
+        return creerClient;
+    }
+
+    public void setCreerClient(String creerClient) {
+        this.creerClient = creerClient;
+    }
+
+    public String getModifierClient() {
+        return modifierClient;
+    }
+
+    public void setModifierClient(String modifierClient) {
+        this.modifierClient = modifierClient;
+    }
+
+    public String getCreerCycle() {
+        return creerCycle;
+    }
+
+    public void setCreerCycle(String creerCycle) {
+        this.creerCycle = creerCycle;
+    }
+
+    public String getModifierCycle() {
+        return modifierCycle;
+    }
+
+    public void setModifierCycle(String modifierCycle) {
+        this.modifierCycle = modifierCycle;
+    }
+
+    public String getCreerExercice() {
+        return creerExercice;
+    }
+
+    public void setCreerExercice(String creerExercice) {
+        this.creerExercice = creerExercice;
+    }
+
+    public String getModifierExercice() {
+        return modifierExercice;
+    }
+
+    public void setModifierExercice(String modifierExercice) {
+        this.modifierExercice = modifierExercice;
+    }
+
+    public String getCreerTypeMision() {
+        return creerTypeMision;
+    }
+
+    public void setCreerTypeMision(String creerTypeMision) {
+        this.creerTypeMision = creerTypeMision;
+    }
+
+    public String getModifierTypeMision() {
+        return modifierTypeMision;
+    }
+
+    public void setModifierTypeMision(String modifierTypeMision) {
+        this.modifierTypeMision = modifierTypeMision;
+    }
+
+    public String getCreerClasseur() {
+        return creerClasseur;
+    }
+
+    public void setCreerClasseur(String creerClasseur) {
+        this.creerClasseur = creerClasseur;
+    }
+
+    public String getModifierClasseur() {
+        return modifierClasseur;
+    }
+
+    public void setModifierClasseur(String modifierClasseur) {
+        this.modifierClasseur = modifierClasseur;
+    }
+
+    public String getCreerDossier() {
+        return creerDossier;
+    }
+
+    public void setCreerDossier(String creerDossier) {
+        this.creerDossier = creerDossier;
+    }
+
+    public String getModifierDossier() {
+        return modifierDossier;
+    }
+
+    public void setModifierDossier(String modifierDossier) {
+        this.modifierDossier = modifierDossier;
+    }
+
+    public String getCreerContrat() {
+        return creerContrat;
+    }
+
+    public void setCreerContrat(String creerContrat) {
+        this.creerContrat = creerContrat;
+    }
+
+    public String getModifierContrat() {
+        return modifierContrat;
+    }
+
+    public void setModifierContrat(String modifierContrat) {
+        this.modifierContrat = modifierContrat;
+    }
+
+    public String getMesEquipes() {
+        return mesEquipes;
+    }
+
+    public void setMesEquipes(String mesEquipes) {
+        this.mesEquipes = mesEquipes;
+    }
+
+    public String getCreerMission() {
+        return creerMission;
+    }
+
+    public void setCreerMission(String creerMission) {
+        this.creerMission = creerMission;
+    }
+
+    public String getModifierMission() {
+        return modifierMission;
+    }
+
+    public void setModifierMission(String modifierMission) {
+        this.modifierMission = modifierMission;
+    }
+
+    public String getCreerEquipe() {
+        return creerEquipe;
+    }
+
+    public void setCreerEquipe(String creerEquipe) {
+        this.creerEquipe = creerEquipe;
+    }
+
+    public String getModifierEquipe() {
+        return modifierEquipe;
+    }
+
+    public void setModifierEquipe(String modifierEquipe) {
+        this.modifierEquipe = modifierEquipe;
+    }
+
+    public String getAffecterMembre() {
+        return affecterMembre;
+    }
+
+    public void setAffecterMembre(String affecterMembre) {
+        this.affecterMembre = affecterMembre;
+    }
+
+    public String getValiderMembre() {
+        return validerMembre;
+    }
+
+    public void setValiderMembre(String validerMembre) {
+        this.validerMembre = validerMembre;
+    }
+
+    public String getCreerClasseurClient() {
+        return creerClasseurClient;
+    }
+
+    public void setCreerClasseurClient(String creerClasseurClient) {
+        this.creerClasseurClient = creerClasseurClient;
+    }
+
+    public String getModifierClasseurClient() {
+        return modifierClasseurClient;
+    }
+
+    public void setModifierClasseurClient(String modifierClasseurClient) {
+        this.modifierClasseurClient = modifierClasseurClient;
+    }
+
+    public String getCreerFichier() {
+        return creerFichier;
+    }
+
+    public void setCreerFichier(String creerFichier) {
+        this.creerFichier = creerFichier;
+    }
+
+    public String getModifierFichier() {
+        return modifierFichier;
+    }
+
+    public void setModifierFichier(String modifierFichier) {
+        this.modifierFichier = modifierFichier;
+    }
+
+    public String getCreerPoste() {
+        return creerPoste;
+    }
+
+    public void setCreerPoste(String creerPoste) {
+        this.creerPoste = creerPoste;
+    }
+
+    public String getModifierPoste() {
+        return modifierPoste;
+    }
+
+    public void setModifierPoste(String modifierPoste) {
+        this.modifierPoste = modifierPoste;
     }
 
     public String getCreerProfil() {
@@ -600,6 +852,14 @@ public class LoginBean implements Serializable {
         this.desactiverCompte = desactiverCompte;
     }
 
+    public String getPer() {
+        return per;
+    }
+
+    public void setPer(String per) {
+        this.per = per;
+    }
+
     public String getQuestion() {
         return question;
     }
@@ -616,12 +876,52 @@ public class LoginBean implements Serializable {
         this.reponse = reponse;
     }
 
+    public Utilisateur getPerse() {
+        return perse;
+    }
+
+    public void setPerse(Utilisateur perse) {
+        this.perse = perse;
+    }
+
     public String getLastPass() {
         return lastPass;
     }
 
     public void setLastPass(String lastPass) {
         this.lastPass = lastPass;
+    }
+
+    public String getAdministration() {
+        return administration;
+    }
+
+    public void setAdministration(String administration) {
+        this.administration = administration;
+    }
+
+    public String getPersonnel() {
+        return personnel;
+    }
+
+    public void setPersonnel(String personnel) {
+        this.personnel = personnel;
+    }
+
+    public String getMission() {
+        return mission;
+    }
+
+    public void setMission(String mission) {
+        this.mission = mission;
+    }
+
+    public String getRapport() {
+        return rapport;
+    }
+
+    public void setRapport(String rapport) {
+        this.rapport = rapport;
     }
 
     public String getEtat() {
@@ -648,6 +948,134 @@ public class LoginBean implements Serializable {
         this.admin = admin;
     }
 
+    public String getCabinet() {
+        return cabinet;
+    }
+
+    public void setCabinet(String cabinet) {
+        this.cabinet = cabinet;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
+
+    public String getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(String cycle) {
+        this.cycle = cycle;
+    }
+
+    public String getExercice() {
+        return exercice;
+    }
+
+    public void setExercice(String exercice) {
+        this.exercice = exercice;
+    }
+
+    public String getTypeMission() {
+        return typeMission;
+    }
+
+    public void setTypeMission(String typeMission) {
+        this.typeMission = typeMission;
+    }
+
+    public String getClasseur() {
+        return classeur;
+    }
+
+    public void setClasseur(String classeur) {
+        this.classeur = classeur;
+    }
+
+    public String getDossier() {
+        return dossier;
+    }
+
+    public void setDossier(String dossier) {
+        this.dossier = dossier;
+    }
+
+    public String getContrat() {
+        return contrat;
+    }
+
+    public void setContrat(String contrat) {
+        this.contrat = contrat;
+    }
+
+    public String getMissione() {
+        return missione;
+    }
+
+    public void setMissione(String missione) {
+        this.missione = missione;
+    }
+
+    public String getEquipe() {
+        return equipe;
+    }
+
+    public void setEquipe(String equipe) {
+        this.equipe = equipe;
+    }
+
+    public String getCreerDossierClient() {
+        return creerDossierClient;
+    }
+
+    public void setCreerDossierClient(String creerDossierClient) {
+        this.creerDossierClient = creerDossierClient;
+    }
+
+    public String getModifierDossierClient() {
+        return modifierDossierClient;
+    }
+
+    public void setModifierDossierClient(String modifierDossierClient) {
+        this.modifierDossierClient = modifierDossierClient;
+    }
+
+    public String getClasseurClient() {
+        return classeurClient;
+    }
+
+    public void setClasseurClient(String classeurClient) {
+        this.classeurClient = classeurClient;
+    }
+
+    public String getDossierClient() {
+        return dossierClient;
+    }
+
+    public void setDossierClient(String dossierClient) {
+        this.dossierClient = dossierClient;
+    }
+
+    public String getFichier() {
+        return fichier;
+    }
+
+    public void setFichier(String fichier) {
+        this.fichier = fichier;
+    }
+
+    public String getPoste() {
+        return poste;
+    }
+
+    public void setPoste(String poste) {
+        this.poste = poste;
+    }
+
     public String getProfil() {
         return profil;
     }
@@ -664,39 +1092,6 @@ public class LoginBean implements Serializable {
         this.usbl = usbl;
     }
 
-    public String getUs() {
-        return us;
-    }
-
-    public void setUs(String us) {
-        this.us = us;
-    }
-
-    public Utilisateur getUser() {
-        return user;
-    }
-
-    public void setUser(Utilisateur user) {
-        this.user = user;
-    }
-
-    public Utilisateur getUsers() {
-        return users;
-    }
-
-    public void setUsers(Utilisateur users) {
-        this.users = users;
-    }
-
-    public String getRecupResponse() {
-        recupResponse = this.recupererQuestion();
-        return recupResponse;
-    }
-
-    public void setRecupResponse(String recupResponse) {
-        this.recupResponse = recupResponse;
-    }
-
     public ProfilUtilisateurServiceBeanLocal getPusbl() {
         return pusbl;
     }
@@ -705,189 +1100,12 @@ public class LoginBean implements Serializable {
         this.pusbl = pusbl;
     }
 
-    public ProfilUtilisateur getProfilUtilisateur() {
-        return profilUtilisateur;
-    }
-
-    public void setProfilUtilisateur(ProfilUtilisateur profilUtilisateur) {
-        this.profilUtilisateur = profilUtilisateur;
-    }
-
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-
-    public String getInscription() {
-        return inscription;
-    }
-
-    public void setInscription(String inscription) {
-        this.inscription = inscription;
-    }
-
-    public String getGroupement() {
-        return groupement;
-    }
-
-    public void setGroupement(String groupement) {
-        this.groupement = groupement;
-    }
-
-    public String getDemande() {
-        return demande;
-    }
-
-    public void setDemande(String demande) {
-        this.demande = demande;
-    }
-
-    public String getPersonnel() {
-        return personnel;
-    }
-
-    public void setPersonnel(String personnel) {
-        this.personnel = personnel;
-    }
-
-    public String getAjouterDemande() {
-        return ajouterDemande;
-    }
-
-    public void setAjouterDemande(String ajouterDemande) {
-        this.ajouterDemande = ajouterDemande;
-    }
-
-    public String getModifierDemande() {
-        return modifierDemande;
-    }
-
-    public void setModifierDemande(String modifierDemande) {
-        this.modifierDemande = modifierDemande;
-    }
-
-    public String getValiderDemande() {
-        return validerDemande;
-    }
-
-    public void setValiderDemande(String validerDemande) {
-        this.validerDemande = validerDemande;
-    }
-
-    public String getRetirerEnfant() {
-        return retirerEnfant;
-    }
-
-    public void setRetirerEnfant(String retirerEnfant) {
-        this.retirerEnfant = retirerEnfant;
-    }
-
-    public String getAjouterPersonnel() {
-        return ajouterPersonnel;
-    }
-
-    public void setAjouterPersonnel(String ajouterPersonnel) {
-        this.ajouterPersonnel = ajouterPersonnel;
-    }
-
-    public String getModifierPersonnel() {
-        return modifierPersonnel;
-    }
-
-    public void setModifierPersonnel(String modifierPersonnel) {
-        this.modifierPersonnel = modifierPersonnel;
-    }
-
-    public String getActiverPersonnel() {
-        return ActiverPersonnel;
-    }
-
-    public void setActiverPersonnel(String ActiverPersonnel) {
-        this.ActiverPersonnel = ActiverPersonnel;
-    }
-
-    public String getDesactiverPersonnel() {
-        return DesactiverPersonnel;
-    }
-
-    public void setDesactiverPersonnel(String DesactiverPersonnel) {
-        this.DesactiverPersonnel = DesactiverPersonnel;
-    }
-
-    public String getEquipe() {
-        return Equipe;
-    }
-
-    public void setEquipe(String Equipe) {
-        this.Equipe = Equipe;
-    }
-
-    public String getGererEquipe() {
-        return gererEquipe;
-    }
-
-    public void setGererEquipe(String gererEquipe) {
-        this.gererEquipe = gererEquipe;
-    }
-
-    public String getMesEquipes() {
-        return mesEquipes;
-    }
-
-    public void setMesEquipes(String mesEquipes) {
-        this.mesEquipes = mesEquipes;
-    }
-
-    public String getProjet() {
-        return projet;
-    }
-
-    public void setProjet(String projet) {
-        this.projet = projet;
-    }
-
-    public String getAjouterProjet() {
-        return ajouterProjet;
-    }
-
-    public void setAjouterProjet(String ajouterProjet) {
-        this.ajouterProjet = ajouterProjet;
-    }
-
-    public String getModifierProjet() {
-        return modifierProjet;
-    }
-
-    public void setModifierProjet(String modifierProjet) {
-        this.modifierProjet = modifierProjet;
-    }
-
-    public String getPublierProjet() {
-        return publierProjet;
-    }
-
-    public void setPublierProjet(String publierProjet) {
-        this.publierProjet = publierProjet;
-    }
-
-    public String getMettreFinProjet() {
-        return mettreFinProjet;
-    }
-
-    public void setMettreFinProjet(String mettreFinProjet) {
-        this.mettreFinProjet = mettreFinProjet;
-    }
-
-    public String getParrainage() {
-        return parrainage;
-    }
-
-    public void setParrainage(String parrainage) {
-        this.parrainage = parrainage;
     }
 
     public MethodeJournalisation getJournalisation() {

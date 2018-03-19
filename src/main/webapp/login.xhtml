@@ -12,7 +12,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>ShopApp</title>
+        <title>Oficina</title>
         <h:outputScript name="js/layout.js" library="spark-layout" />
 
         <h:outputText value="&lt;!--[if gte IE 9]&gt;" escape="false" />
@@ -33,16 +33,15 @@
                          style="margin-top:5%; background-image:url(#{resource['spark-layout:images/loginpageillust.svg']}); background-repeat:no-repeat; background-position:center; background-size:cover;">
                         <div class="Container90 Fnone MarAuto TexAlCenter">
                             <div class="EmptyBox50"></div>
-                         <!--    <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>-->
                             <div class="EmptyBox20"></div>
                             <p:inputText id="identifiant" value="#{loginBean.username}" placeholder="Username" styleClass="Container80 Fnone MarAuto Fs18"/>
                             <div class="EmptyBox10"></div>
                             <p:password id="motdepasse" value="#{loginBean.password}" placeholder="Password" styleClass="Container80 Fnone MarAuto Fs18"/>
                             <div class="EmptyBox20"></div>
-<!--                            <div class="Container85 Fnone MarAuto softgray">
-                                <div class="EmptyBox5"></div>
-                                <p:selectBooleanCheckbox id="rememberMe" value="#{loginBean.remember}" itemLabel="Se souvenir"/>
-                            </div>-->
+                            <!--                            <div class="Container85 Fnone MarAuto softgray">
+                                                            <div class="EmptyBox5"></div>
+                                                            <p:selectBooleanCheckbox id="rememberMe" value="#{loginBean.remember}" itemLabel="Se souvenir"/>
+                                                        </div>-->
                             <div class="EmptyBox30"></div>
                             <p:commandButton process="@form"  value="Se connecter" styleClass="Fs16" update="message" actionListener="#{loginBean.login()}"/>                            <div class="EmptyBox10"></div>
 
@@ -63,7 +62,6 @@
                     <h2>Modifiez le mot de passe</h2></center>
                 <p:outputPanel autoUpdate="true">
                     <div class="Container90 Fnone MarAuto TexAlCenter">
-                        <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
                         <div class="EmptyBox20"></div>
                         <p:password id="newPasse" requiredMessage="Saisir le mot de passe" required="true" value="#{loginBean.newPass}" feedback="true" styleClass="Container80 Fnone MarAuto Fs18" />
                         <p:watermark for="newPasse" value="Nouveau"  />
@@ -96,9 +94,8 @@
                 <p:outputPanel id="ver" autoUpdate="true">
                     <div class="Container90 Fnone MarAuto TexAlCenter">
                         <div class="EmptyBox50"></div>
-                        <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
                         <div class="EmptyBox20"></div>
-                        <p:inputText id="username" requiredMessage="saisir l'identifiant" required="true" value="#{loginBean.us}"/>
+                        <p:inputText id="username" requiredMessage="saisir l'identifiant" required="true" value="#{loginBean.per}"/>
                         <p:watermark for="username" value="Identifiant"/>
                         <div class="EmptyBox30"></div>
                         <div class="EmptyBox30"></div>
@@ -119,7 +116,6 @@
                 <p:outputPanel autoUpdate="true">
                     <div class="Container90 Fnone MarAuto TexAlCenter">
                         <div class="EmptyBox50"></div>
-                        <h:graphicImage name="images/logo1.png" width="290" height="100" library="spark-layout" styleClass="MarAuto MarTop20 MarBot10"/>
                         <div class="EmptyBox20"></div>
                         <h:outputText id="question" value="#{loginBean.recupererQuestion()}"/>
                         <div class="EmptyBox30"></div>
