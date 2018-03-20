@@ -26,8 +26,8 @@ import javax.persistence.TemporalType;
 @Table(name = "journals")
 public class Journal implements Serializable{
     @Id
-    @SequenceGenerator(name = "journalSeq", sequenceName = "JOURNAL_SEQ", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO,generator = "journalSeq")
+    //@SequenceGenerator(name = "journalSeq", sequenceName = "JOURNAL_SEQ", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)
     private Long idJourn;
     

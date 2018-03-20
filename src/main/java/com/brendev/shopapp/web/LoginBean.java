@@ -38,10 +38,10 @@ import org.apache.shiro.web.util.WebUtils;
 import org.omnifaces.util.Faces;
 import org.primefaces.context.RequestContext;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -156,11 +156,11 @@ public class LoginBean implements Serializable {
                 try {
                     tx.rollback();
                 } catch (IllegalStateException ex) {
-                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.FATAL, null, ex);
                 } catch (SecurityException ex) {
-                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.FATAL, null, ex);
                 } catch (SystemException ex) {
-                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.FATAL, null, ex);
                 }
             }
         }
@@ -310,7 +310,8 @@ public class LoginBean implements Serializable {
                 }
 
             }
-            journalisation.saveLog4j(LoginBean.class.getName(), org.apache.log4j.Level.INFO, "Journaliser");
+            
+            journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
             SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
             Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "index.xhtml");
         } catch (AuthenticationException e) {
