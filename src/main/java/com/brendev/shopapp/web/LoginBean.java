@@ -195,7 +195,7 @@ public class LoginBean implements Serializable {
             }
 
             UsernamePasswordToken token = new UsernamePasswordToken(username.trim(), password.trim());
-          //  journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
+            //  journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
             //”Remember Me” built-in, just do this:
             token.setRememberMe(false);
             //With most of Shiro, you'll always want to make sure you're working with 
@@ -217,15 +217,15 @@ public class LoginBean implements Serializable {
 //                }
 //            }
 
-            List<Role> roles = this.rsl.getAll();
-            Boolean avoir = false;
+            /*   List<Role> roles = this.rsl.getAll();
+             Boolean avoir = false;
+            
+             for (Role role : roles) {
+             if (subject.hasRole(role.getNom())) {
+             avoir = true;
+             }
+             }*/
             Subject subject = EntityRealm.getSubject();
-            for (Role role : roles) {
-                if (subject.hasRole(role.getNom())) {
-                    avoir = true;
-                }
-            }
-
             if (!username.equalsIgnoreCase("admin")) {
 
                 if (subject.hasRole("Créer poste") || subject.hasRole("Modifier poste")
@@ -304,15 +304,15 @@ public class LoginBean implements Serializable {
                     this.desactiverCompte = "false";
                 }
 
-                if (!avoir) {
+              /*  if (!avoir) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
                     username = "";
                     return;
-                }
+                }*/
 
             }
-            
+
             journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
             SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
             Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "index.xhtml");
@@ -1118,7 +1118,5 @@ public class LoginBean implements Serializable {
     public void setJournalisation(MethodeJournalisation journalisation) {
         this.journalisation = journalisation;
     }
-    
-    
 
 }

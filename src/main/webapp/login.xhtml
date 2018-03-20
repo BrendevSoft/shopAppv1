@@ -37,11 +37,7 @@
                             <p:inputText id="identifiant" value="#{loginBean.username}" placeholder="Username" styleClass="Container80 Fnone MarAuto Fs18"/>
                             <div class="EmptyBox10"></div>
                             <p:password id="motdepasse" value="#{loginBean.password}" placeholder="Password" styleClass="Container80 Fnone MarAuto Fs18"/>
-                            <div class="EmptyBox20"></div>
-                            <!--                            <div class="Container85 Fnone MarAuto softgray">
-                                                            <div class="EmptyBox5"></div>
-                                                            <p:selectBooleanCheckbox id="rememberMe" value="#{loginBean.remember}" itemLabel="Se souvenir"/>
-                                                        </div>-->
+                           
                             <div class="EmptyBox30"></div>
                             <p:commandButton process="@form"  value="Se connecter" styleClass="Fs16" update="message" actionListener="#{loginBean.login()}"/>                            <div class="EmptyBox10"></div>
 

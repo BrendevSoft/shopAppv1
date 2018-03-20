@@ -1,5 +1,6 @@
 package com.brendev.shopapp.shiro;
 
+
 import com.brendev.shopapp.dao.ProfilRoleDaoBeanLocal;
 import com.brendev.shopapp.dao.ProfilUtilisateurDaoBeanLocal;
 import com.brendev.shopapp.dao.UtilisateurDaoBeanLocal;
@@ -25,7 +26,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-
 import javax.ejb.EJB;
 
 public class EntityRealm extends AuthorizingRealm {
@@ -113,32 +113,7 @@ public class EntityRealm extends AuthorizingRealm {
         }
     }
 
-    /*@Override
-     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        
-     SimpleAuthorizationInfo info = null;
-
-     try {
-     String userId = (String) principals.fromRealm(this.getName()).iterator().next();
-     personnel = pdaol.getOneBy("login", userId);
-     if (personnel != null) {
-               
-     info = new SimpleAuthorizationInfo();
-     String nomGroupeUtil = personnel.getCategoriePersonnel().getNom();
-     info.addRole(nomGroupeUtil);
-                
-     final List<String> perm = new ArrayList<>();
-     for (ProfilRole ca : personnel.getCategoriePersonnel().getCategoriePersonnelRoles()) {
-     perm.add(ca.getRole().getNom());
-     }
-     info.addStringPermissions(perm);
-
-     }
-     } catch (Exception e) {
-
-     }
-     return info;
-     }*/
+  
     public static Utilisateur getUser() {
         Subject currentUser = SecurityUtils.getSubject();
         if (currentUser.isAuthenticated()) {

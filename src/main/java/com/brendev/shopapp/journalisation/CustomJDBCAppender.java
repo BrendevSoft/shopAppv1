@@ -78,43 +78,41 @@ public class CustomJDBCAppender extends AppenderSkeleton {
     @Override
     protected void append(LoggingEvent event) {
         try {
-            if (EntityRealm.getUser() != null) {
-                Class.forName(driver);
-                Connection conn = DriverManager.getConnection(URL, user, password);
 
-                st = conn.createStatement();
-                rst = st.executeQuery("select count(*) as nome from JOURNALS");
-                countLogs = 1;
+            Class.forName(driver);
+            Connection conn = DriverManager.getConnection(URL, user, password);
 
-                while (rst.next()) {
-                    countLogs = rst.getInt("nome") + 1;
-                }
-                rst.close();
+            st = conn.createStatement();
+            rst = st.executeQuery("select count(*) as nome from JOURNALS");
+            countLogs = 1;
 
-                pst = conn.prepareStatement(sql);
-
-                //pst.setLong(1, Long.parseLong(String.valueOf(countLogs)));
-                pst.setDate(1, new java.sql.Date(System.currentTimeMillis()));
-
-                pst.setString(2, Convertiseur.getHeure(Calendar.getInstance().getTime()));
-
-                pst.setString(3, event.getLevel().toString());
-
-                if (!event.getLoggerName().equals("org.apache.shiro.realm.AuthorizingRealm")) {
-                    pst.setString(4, event.getLoggerName());
-                }
-
-                pst.setString(5, event.getMessage().toString());
-
-                pst.setString(6, EntityRealm.getUser().getNom() + " " + EntityRealm.getUser().getPrenom());
-
-                //pst.setString(8, InetAddress.getLocalHost().getHostName());                
-                pst.executeUpdate();
-                pst.close();
-                conn.close();
-            } else {
-                System.out.println("Absence d'utilisateur");
+            while (rst.next()) {
+                countLogs = rst.getInt("nome") + 1;
             }
+            rst.close();
+
+            pst = conn.prepareStatement(sql);
+
+            //pst.setLong(1, Long.parseLong(String.valueOf(countLogs)));
+            pst.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+
+            pst.setString(2, Convertiseur.getHeure(Calendar.getInstance().getTime()));
+
+            pst.setString(3, event.getLevel().toString());
+
+            if (!event.getLoggerName().equals("org.apache.shiro.realm.AuthorizingRealm")) {
+                pst.setString(4, event.getLoggerName());
+            }
+
+            pst.setString(5, event.getMessage().toString());
+
+            pst.setString(6, EntityRealm.getUser().getNom() + " " + EntityRealm.getUser().getPrenom());
+
+            //pst.setString(8, InetAddress.getLocalHost().getHostName());                
+            pst.executeUpdate();
+            pst.close();
+            conn.close();
+
         } catch (Exception e) {
             System.out.println("Test log4j echoue");
             e.printStackTrace();
