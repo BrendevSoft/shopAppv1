@@ -9,11 +9,12 @@ and open the template in the editor.
 
 <log4j:configuration>  
     <appender name="DB" class="com.brendev.shopapp.journalisation.CustomJDBCAppender">
-        <param name="URL" value="jdbc:mysql://localhost:3306/shopapp?zeroDateTimeBehavior=convertToNull"/>
-        <!--<param name="driver" value="org.postgresql.Driver"/>-->
-        <param name="driver" value="com.mysql.jdbc.Driver"/>
-        <param name="user" value="aidapp"/>
-        <param name="password" value="aidapp"/>
+        <!-- <param name="URL" value="jdbc:mysql://localhost:3306/shopapp?zeroDateTimeBehavior=convertToNull"/>
+        <param name="driver" value="com.mysql.jdbc.Driver"/>-->
+        <param name="URL" value="jdbc:postgresql://localhost:5432/shopApp"/>
+        <param name="driver" value="org.postgresql.Driver"/>
+        <param name="user" value="postgres"/>
+        <param name="password" value="@Hermionne2017"/>
         <layout class="org.apache.log4j.PatternLayout">
                 
         </layout>
