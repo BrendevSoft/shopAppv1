@@ -173,6 +173,7 @@ public class LoginBean implements Serializable {
             System.out.println("ps=" + password);
             pers = usbl.getOneBy("login", username);
             if (pers != null) {
+                //journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
                 if (pers.getActif() == false) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
@@ -194,6 +195,7 @@ public class LoginBean implements Serializable {
             }
 
             UsernamePasswordToken token = new UsernamePasswordToken(username.trim(), password.trim());
+          //  journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
             //”Remember Me” built-in, just do this:
             token.setRememberMe(false);
             //With most of Shiro, you'll always want to make sure you're working with 

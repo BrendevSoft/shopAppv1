@@ -13,6 +13,7 @@ import com.brendev.shopapp.services.ProfilServiceBeanLocal;
 import com.brendev.shopapp.services.ProfilUtilisateurServiceBeanLocal;
 import com.brendev.shopapp.services.UtilisateurServiceBeanLocal;
 import com.brendev.shopapp.utils.constantes.Constante;
+import com.brendev.shopapp.utils.constantes.MethodeJournalisation;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -26,6 +27,7 @@ import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
+import org.apache.log4j.Level;
 import org.primefaces.event.FlowEvent;
 
 /**
@@ -57,6 +59,8 @@ public class UtilisateurBean implements Serializable {
     @EJB
     private ProfilUtilisateurServiceBeanLocal pusbl;
 
+    private MethodeJournalisation journalisation;
+
     /**
      * Creates a new instance of UtilisateurBean
      */
@@ -71,6 +75,11 @@ public class UtilisateurBean implements Serializable {
         this.u = new Utilisateur();
         this.profilUtilisateur = new ProfilUtilisateur();
         this.profilUtilisateurs = new ArrayList<>();
+        this.journalisation = new MethodeJournalisation();
+    }
+
+    public void log() {
+        journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
     }
 
     public void nouveau(ActionEvent actionEvent) {
@@ -90,8 +99,8 @@ public class UtilisateurBean implements Serializable {
     public void getObject(Long id) {
         this.utilisateur = this.usbl.find(id);
     }
-    
-    public void getObject(ProfilUtilisateurId id){
+
+    public void getObject(ProfilUtilisateurId id) {
         this.profilUtilisateur = this.pusbl.find(id);
         this.utilisateur = this.profilUtilisateur.getUtilisateur();
         this.profil = this.profilUtilisateur.getProfil();
@@ -125,13 +134,12 @@ public class UtilisateurBean implements Serializable {
         List<Utilisateur> us = this.usbl.getAll();
         List<Utilisateur> us1 = new ArrayList<>();
         for (Utilisateur us11 : us) {
-           /* if (us11.getProfil() != null) {
-                us1.add(us11);
-            }*/
+            /* if (us11.getProfil() != null) {
+             us1.add(us11);
+             }*/
         }
         return us1;
     }
-   
 
     public List<Utilisateur> utilisateursNonProfil() {
         return this.pusbl.getUtilisateursProfil();
@@ -143,12 +151,12 @@ public class UtilisateurBean implements Serializable {
         }
     }
 
-    public void activer(){
-         System.out.println("testt");
+    public void activer() {
+        System.out.println("testt");
     }
-    
+
     public void activerUtilisateur(Long u) {
-       FacesContext context = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
             List<Utilisateur> us = this.usbl.getBy("id", u);
             Utilisateur u1 = new Utilisateur();
@@ -202,7 +210,7 @@ public class UtilisateurBean implements Serializable {
     public void modifierPersonnelProfil() {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-           // this.utilisateur.setProfil(profil);
+            // this.utilisateur.setProfil(profil);
             this.usbl.updateOne(utilisateur);
             context.addMessage(null, new FacesMessage(Constante.MODIFICATION_REUSSIT));
         } catch (Exception e) {
@@ -369,5 +377,4 @@ public class UtilisateurBean implements Serializable {
         this.pusbl = pusbl;
     }
 
-    
 }
