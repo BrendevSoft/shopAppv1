@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"    
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:tab title="Utilisateur">
+        <h:form id="user">
+            <h:form id="ajoutUser">
+                <p:commandButton value="Ajouter un utilisateur" onclick="PF('userAjouts').show();" process="@this" style="display:inline-block;margin-top:5px"/> 
+                <p></p>
+                <p:dialog  widgetVar="userAjouts" closable="false" resizable="false" id="editP" modal="true" minHeight="150" minWidth="150" width="700" position="center">
+                    <p:fieldset legend="Formulaire de l'utilisateur">
+                        <h:form id="modalForm">
+                            <p:growl id="growl" showSummary="true" life="4000"/>
+                            <center>
+                                <h:panelGrid columns="2" columnClasses="label, value" id="securiteP">
+
+                                    <p:fileUpload id="fileRap" fileLimitMessage="Vous ne pouvez que choisir qu'un seul fichier svp !"
+                                                  invalidFileMessage="Fichier invalide, choisissez un fichier au format xlsx svp !" 
+                                                  mode="advanced" uploadLabel="Charger" cancelLabel="Annuler" label="Choisir fichier"
+                                                  dragDropSupport="false" fileLimit="1" allowTypes="/(\.|\/)(xlsx)$/"  update="growl"
+                                                  fileUploadListener="#{utilisateurBean.handleFileUpload}"/>
+                                    <h:outputText/>
+                                    <p:commandButton  class="Fs16 OrangeButton" id="cancel" value="Annuler" actionListener="#{utilisateurBean.annulerImporter()}" process="@this" style="right: 70%" onclick="PF('userAjouts').hide();"/>
+                                    <p:commandButton update=":userForm:userTab:user:afficheTab:ajouTab, growl" class="Fs16 GreenButton" id="ajouter" value="Ajouter" actionListener="#{utilisateurBean.importer()}" process="@form" style="left: 90%" />
+                                </h:panelGrid>                                                       
+                            </center>
+                        </h:form>
+                    </p:fieldset>
+                </p:dialog>
+            </h:form>
+            <h:form id="afficheTab">
+
+                <p:dataTable  value="#{utilisateurBean.list}" var="use" id="ajouTab"
+                              emptyMessage="Utilisateur non trouvé" selectionMode="single"
+                              rows="5" scrollable="true"  paginator="true" paginatorPosition="top" 
+                              styleClass="classTypeFiche"
+                              rowsPerPageTemplate="2,5,10,15" rowKey="#{use.id}" selection="#{use}"
+                              style="border-color: #00AEEF">
+                    <f:facet name="header">
+                        <h:outputText value="LISTE DES UTILISATEURS"/>
+                    </f:facet>
+                    <p:column id="userNom" headerText="Nom" filterBy="#{use.nom}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{use.nom}"/>
+                    </p:column>
+                    <p:column id="userPrenom" headerText="Prénom" filterBy="#{use.prenom}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{use.prenom}"/>
+                    </p:column>
+                    <p:column id="userSexe" headerText="Sexe" filterBy="#{use.sexe}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{use.sexe}"/>
+                    </p:column>
+                    <p:column id="userTeléphone" headerText="Téléphone" filterBy="#{use.adresse.telephone}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{use.adresse.telephone}"/>
+                    </p:column>
+                    <p:column id="userEmail" headerText="Email" filterBy="#{use.adresse.email}" filterMatchMode="exact" footerText="exacte">
+                        <h:outputText value="#{use.adresse.email}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </h:form>
+    </p:tab>
+
+</ui:composition>

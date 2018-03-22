@@ -50,6 +50,7 @@ public abstract class Constante implements Serializable {
     public static final String BOUTON_ANNULER = "Annuler";
     public static final String BOUTON_MODIFIER = "Modifier";
     public static final String BOUTON_VALIDER = "Valider";
+    public static final String MOT_DE_PASSE_DEFAUT = "admin";
 
     public Constante() {
     }

@@ -173,7 +173,6 @@ public class LoginBean implements Serializable {
             System.out.println("ps=" + password);
             pers = usbl.getOneBy("login", username);
             if (pers != null) {
-                //journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
                 if (pers.getActif() == false) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
@@ -217,15 +216,15 @@ public class LoginBean implements Serializable {
 //                }
 //            }
 
-            /*   List<Role> roles = this.rsl.getAll();
+            List<Role> roles = this.rsl.getAll();
              Boolean avoir = false;
-            
+            Subject subject = EntityRealm.getSubject();
              for (Role role : roles) {
              if (subject.hasRole(role.getNom())) {
              avoir = true;
              }
-             }*/
-            Subject subject = EntityRealm.getSubject();
+             }
+            
             if (!username.equalsIgnoreCase("admin")) {
 
                 if (subject.hasRole("Créer poste") || subject.hasRole("Modifier poste")
@@ -304,16 +303,16 @@ public class LoginBean implements Serializable {
                     this.desactiverCompte = "false";
                 }
 
-              /*  if (!avoir) {
+               if (!avoir) {
                     RequestContext context = RequestContext.getCurrentInstance();
                     context.execute("PF('error').show();");
                     username = "";
                     return;
-                }*/
+                }
 
             }
 
-            journalisation.saveLog4j(LoginBean.class.getName(), Level.INFO, "Journaliser");
+            journalisation.saveLog4j(LoginBean.class.getSimpleName(), Level.INFO, "Connexion");
             SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
             Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "index.xhtml");
         } catch (AuthenticationException e) {
@@ -339,6 +338,7 @@ public class LoginBean implements Serializable {
 
     public void logout() {
         try {
+            journalisation.saveLog4j(LoginBean.class.getSimpleName(), Level.INFO, "Déconnexion");
             EntityRealm.getSubject().logout();
             Faces.redirect("login.xhtml");
             username = "";

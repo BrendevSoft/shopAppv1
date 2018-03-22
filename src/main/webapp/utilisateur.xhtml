@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <p:fieldset legend="LA GESTION DES UTILISATEURS" style="border-color: #00c9b6;font-size: xx-large">
+                        <h:form id="userForm">
+                            <p:tabView dynamic="true" cache="true" scrollable="false" id="userTab"  value="La page de sécurité" style="border-color: #00c9b6;">
+                                <ui:include src="utilisateurs/utilisateur.xhtml"/>                                    
+                            </p:tabView>
+                        </h:form>
+                    </p:fieldset>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

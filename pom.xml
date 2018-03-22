@@ -9,7 +9,7 @@
 
     <name>shopApp</name>
 
-   <properties>
+    <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.j2eeVersion>1.7</netbeans.hint.j2eeVersion>
@@ -40,6 +40,17 @@
     </repositories>
     
     <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
@@ -86,7 +97,7 @@
             <version>3.0.0</version>
         </dependency>
        
-       <!-- it help to get slf4j and log4j 
+        <!-- it help to get slf4j and log4j 
        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -96,17 +107,17 @@
         
         
         <dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>jul-to-slf4j</artifactId>
-		<version>1.7.25</version>
-	</dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.25</version>
+        </dependency>
 
-	<!-- it help to get slf4j and log4j -->
-	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-log4j12</artifactId>
-		<version>1.7.25</version>
-	</dependency>
+        <!-- it help to get slf4j and log4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
       
         <dependency>
             <groupId>com.amazonaws</groupId>
