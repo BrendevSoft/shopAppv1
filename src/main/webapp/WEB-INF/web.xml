@@ -116,7 +116,7 @@
         </init-param>
         <init-param>
             <param-name>uploadDirectory</param-name>
-            <param-value>/resources/image</param-value>
+            <param-value>/resources/images</param-value>
         </init-param>
     </filter>
     <filter-mapping>

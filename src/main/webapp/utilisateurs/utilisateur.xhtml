@@ -22,8 +22,8 @@
                                                   dragDropSupport="false" fileLimit="1" allowTypes="/(\.|\/)(xlsx)$/"  update="growl"
                                                   fileUploadListener="#{utilisateurBean.handleFileUpload}"/>
                                     <h:outputText/>
-                                    <p:commandButton  class="Fs16 OrangeButton" id="cancel" value="Annuler" actionListener="#{utilisateurBean.annulerImporter()}" process="@this" style="right: 70%" onclick="PF('userAjouts').hide();"/>
-                                    <p:commandButton update=":userForm:userTab:user:afficheTab:ajouTab, growl" class="Fs16 GreenButton" id="ajouter" value="Ajouter" actionListener="#{utilisateurBean.importer()}" process="@form" style="left: 90%" />
+                                    <p:commandButton  class="Fs16 OrangeButton" id="cancel" value="Annuler" actionListener="#{utilisateurBean.annulerImporter()}" process="@this" style="right: 10%" onclick="PF('userAjouts').hide();"/>
+                                    <p:commandButton update=":userForm:userTab:user:afficheTab:ajouTab, growl" class="Fs16 GreenButton" id="ajouter" value="Ajouter" actionListener="#{utilisateurBean.importer()}" process="@form" style="left: 80%" />
                                 </h:panelGrid>                                                       
                             </center>
                         </h:form>
